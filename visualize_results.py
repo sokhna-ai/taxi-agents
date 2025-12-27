@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 
 print("=== ANALYZING TAXI-V3 AGENTS ===\n")
 
-# Configuration
 env = gym.make("Taxi-v3")
 num_episodes_eval = 1000
 
@@ -79,37 +78,45 @@ for ep in range(num_episodes_eval):
 
 print(f"✅ Evaluation done\n")
 
-# VISUALIZATIONS
+# VISUALIZATIONS - AMÉLIORÉES
 print("4️⃣ Creating visualizations...")
 fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 
 window = 100
 smoothed = np.convolve(training_rewards, np.ones(window)/window, mode="valid")
-axes[0, 0].plot(smoothed, linewidth=2)
-axes[0, 0].set_title("Learning Curve")
+axes[0, 0].plot(smoothed, linewidth=2, color='blue')
+axes[0, 0].set_title("Learning Curve (Q-Learning)", fontsize=12, fontweight='bold')
+axes[0, 0].set_xlabel("Episode")
+axes[0, 0].set_ylabel("Reward moyen")
 axes[0, 0].grid(True, alpha=0.3)
 
-axes[0, 1].hist(random_rewards, bins=30, alpha=0.7, label='Random', color='red')
-axes[0, 1].hist(q_rewards, bins=30, alpha=0.7, label='Q-Learning', color='green')
-axes[0, 1].set_title("Rewards Distribution")
+# AMÉLIORATION: Histogrammes séparés pour voir les deux
+axes[0, 1].hist(random_rewards, bins=30, alpha=0.6, label='Random Agent', color='red', edgecolor='black')
+axes[0, 1].hist(q_rewards, bins=30, alpha=0.6, label='Q-Learning Agent', color='green', edgecolor='black')
+axes[0, 1].set_title("Rewards Distribution (Separated)", fontsize=12, fontweight='bold')
+axes[0, 1].set_xlabel("Reward per Episode")
+axes[0, 1].set_ylabel("Frequency")
 axes[0, 1].legend()
 axes[0, 1].grid(True, alpha=0.3)
 
-axes[1, 0].hist(random_steps, bins=30, alpha=0.7, label='Random', color='red')
-axes[1, 0].hist(q_steps, bins=30, alpha=0.7, label='Q-Learning', color='green')
-axes[1, 0].set_title("Steps Distribution")
+axes[1, 0].hist(random_steps, bins=30, alpha=0.6, label='Random Agent', color='red', edgecolor='black')
+axes[1, 0].hist(q_steps, bins=30, alpha=0.6, label='Q-Learning Agent', color='green', edgecolor='black')
+axes[1, 0].set_title("Steps Distribution", fontsize=12, fontweight='bold')
+axes[1, 0].set_xlabel("Steps per Episode")
+axes[1, 0].set_ylabel("Frequency")
 axes[1, 0].legend()
 axes[1, 0].grid(True, alpha=0.3)
 
 data = [random_rewards, q_rewards]
-bp = axes[1, 1].boxplot(data, labels=['Random', 'Q-Learning'], patch_artist=True)
+bp = axes[1, 1].boxplot(data, labels=['Random Agent', 'Q-Learning Agent'], patch_artist=True, tick_labels=['Random', 'Q-Learning'])
 bp['boxes'][0].set_facecolor('lightcoral')
 bp['boxes'][1].set_facecolor('lightgreen')
-axes[1, 1].set_title("Rewards Comparison")
+axes[1, 1].set_title("Rewards Comparison (BoxPlot)", fontsize=12, fontweight='bold')
+axes[1, 1].set_ylabel("Reward per Episode")
 axes[1, 1].grid(True, alpha=0.3, axis='y')
 
 plt.tight_layout()
-plt.savefig('agent_comparison.png', dpi=150)
+plt.savefig('agent_comparison.png', dpi=150, bbox_inches='tight')
 print("✅ Saved: agent_comparison.png\n")
 plt.show()
 
